@@ -27,3 +27,8 @@ linux系统环境变量默认包括了头文件路径 /usr/include	/usr/local/in
 
 reason: [json.exception.type_error.302] type must be number, but is null
 这个错误可能是json的键的名字传出和接收的两边不对应，例如传出json[toid] 接收用的json[id]，传出没有设置id键自然为null
+
+之前有一版本用户登出loginout之后，再次登录login程序没反应，是因为当时主线程阻塞在recv函数中，
+当用户loginout之后子线程没有销毁，仍然在recv等待服务器端的响应，当用户再次登录时，服务端响应先被子线程接收，导致主线程阻塞
+
+
