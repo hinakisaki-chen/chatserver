@@ -1,0 +1,29 @@
+该项目json规范，或者直接看业务模块代码chatservice需要什么字段
+登入		{"msgid":1,"id":2,"password":"123456"}
+注册  	{"msgid":3, "name":"li si","password":"123456"}
+一对一聊天 	{"msgid":5, "id":1, "from":"zhang san", "to":2, "msg":"hello"}
+添加好友    {"msgid":6,"id":2,"friendid":1}
+msgid值在public.h中
+
+
+1，	一个大型的项目通常包含这几个文件夹
+bin	可执行文件	lib	库文件	include	头文件	src	源文件	build	构建文件，存放cmake编译产生的中间文件	example	测试样例	     thridparty	第三方库，源文件	    CMakeList.txt		autobulid.sh	构建脚本文件	README	
+
+linux系统环境变量默认包括了头文件路径 /usr/include	/usr/local/include		库文件路径/usr/lib		/usr/local/lib
+
+不要再业务模块代码services操作数据层，也不要再网络模块代码serves处理业务相关的，做到解耦
+
+网络模块和业务模块通过绑定回调函数彻底的拆分开了，业务模块绑定回调函数并实现回调函数，网络模块根据客户端传来的msgid获取对应的回调函数并且调用该回调函数
+业务模块知道回调函数该干什么但是不知道什么时候做，网络模块知道什么时候做
+
+要把业务层和数据层解耦，不要再业务代码模块操作数据库
+位于数据层和业务层中间的ORM层，Object Relationan Mapping 对象关系映射
+把数据库表变成代码里的类（对象），在业务层操作的都是对象，不用手写sql，用面向对象操作数据库
+在DAO数据层进行数据库操作
+
+例如 user类表示user这个表的信息，用面向对象映射表的字段，
+    usermodel类表示对这个表的操作，跟业务不相关，只负责对表的操作
+
+
+reason: [json.exception.type_error.302] type must be number, but is null
+这个错误可能是json的键的名字传出和接收的两边不对应，例如传出json[toid] 接收用的json[id]，传出没有设置id键自然为null
